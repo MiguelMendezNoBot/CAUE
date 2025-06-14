@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Calculadora CAUE - Costo Anual Uniforme Equivalente</title>
+	<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="container">
+	<div class="header">
+		<h1>📊 Calculadora CAUE</h1>
+		<p>Costo Anual Uniforme Equivalente - Comparación de Alternativas</p>
+	</div>
+	
+	<div class="main-content">
+		<!-- Sección de Entrada -->
+		<div class="input-section">
+			<h2 class="section-title">📝 Configuración</h2>
+			
+			<!-- Tasa de Interés Global -->
+			<div class="form-group">
+				<label for="tasaInteres">Tasa de Interés Anual (%)</label>
+				<input type="number" id="tasaInteres" step="0.01" value="5" placeholder="Ej: 5 para 5%">
+			</div>
+			
+			<hr style="margin: 25px 0; border: none; height: 1px; background: #e9ecef;">
+			
+			<h3 style="color: #2c3e50; margin-bottom: 15px;">➕ Agregar Alternativa</h3>
+			
+			<div class="form-group">
+				<label for="nombre">Nombre de la Alternativa</label>
+				<input type="text" id="nombre" placeholder="Ej: Máquina A, Proyecto X">
+			</div>
+			
+			<div class="form-row">
+				<div>
+					<label for="inversion">Inversión Inicial ($)</label>
+					<input type="number" id="inversion" placeholder="30000">
+				</div>
+				<div>
+					<label for="vidaUtil">Vida Útil (años)</label>
+					<input type="number" id="vidaUtil" placeholder="8">
+				</div>
+			</div>
+			
+			<div class="form-row">
+				<div>
+					<label for="valorSalvamento">Valor Salvamento ($)</label>
+					<input type="number" id="valorSalvamento" placeholder="0">
+				</div>
+				<div>
+					<label for="costosOperacion">Costos Anuales ($)</label>
+					<input type="number" id="costosOperacion" placeholder="8500">
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="ingresos">Ingresos Anuales ($)</label>
+				<input type="number" id="ingresos" placeholder="0">
+			</div>
+			
+			<button class="btn" onclick="agregarAlternativa()">➕ Agregar Alternativa</button>
+			<button class="btn btn-secondary" onclick="cargarEjemploDocente()">📚 Cargar Ejemplo del Docente</button>
+			
+			<!-- Lista de Alternativas -->
+			<div id="alternativas-lista" style="margin-top: 25px;">
+				<h3 style="color: #2c3e50; margin-bottom: 15px;">📋 Alternativas Agregadas</h3>
+				<div id="alternativas-container"></div>
+			</div>
+			
+			<button class="btn" onclick="calcularCAUE()" style="background: linear-gradient(135deg, #e74c3c, #c0392b); margin-top: 20px;">🧮 Calcular CAUE</button>
+		</div>
+		
+		<!-- Sección de Resultados -->
+		<div class="results-section">
+			<h2 class="section-title">📈 Resultados</h2>
+			<div id="resultados-container">
+				<div class="results-empty">
+					⚠️ Agrega al menos una alternativa y presiona "Calcular CAUE" para ver los resultados.
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
