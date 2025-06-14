@@ -116,7 +116,7 @@ function actualizarListaAlternativas() {
     const container = document.getElementById('alternativas-container');
 
     if (alternativas.length === 0) {
-        container.innerHTML = '<p style="color: #7f8c8d; font-style: italic;">No hay alternativas agregadas.</p>';
+        container.innerHTML = '<p style="color: #7f8c8d; font-style: italic; font-size: clamp(0.85rem, 2.2vw, 1rem);">No hay alternativas agregadas.</p>';
         return;
     }
 
@@ -124,12 +124,12 @@ function actualizarListaAlternativas() {
         <div class="alternative-item">
             <div class="alternative-header">
                 <strong>${alt.nombre}</strong>
-                <button class="remove-btn" onclick="eliminarAlternativa(${index})">✕</button>
+                <button class="remove-btn" onclick="eliminarAlternativa(${index})" title="Eliminar alternativa">✕</button>
             </div>
-            <div style="font-size: 0.9em; color: #7f8c8d;">
-                💰 Inversión: $${alt.inversion.toLocaleString()} | 
-                📅 ${alt.vidaUtil} años | 
-                💸 Costos: $${alt.costosOperacion.toLocaleString()}/año
+            <div style="font-size: clamp(0.8rem, 2.2vw, 0.9rem); color: #7f8c8d; line-height: 1.4;">
+                💰 Inversión: ${alt.inversion.toLocaleString()}<br>
+                📅 Vida útil: ${alt.vidaUtil} años<br>
+                💸 Costos anuales: ${alt.costosOperacion.toLocaleString()}
             </div>
         </div>
     `).join('');
@@ -161,58 +161,60 @@ function mostrarResultados(comparacion) {
             <div class="result-value" style="color: #27ae60;">
                 ${comparacion.mejorAlternativa.nombre}
             </div>
-            <div style="font-size: 1.2em; margin-top: 10px;">
-                CAUE: <strong>$${comparacion.mejorAlternativa.caueTotal.toFixed(2)}</strong>
+            <div style="font-size: clamp(1rem, 3vw, 1.2rem); margin-top: 10px;">
+                CAUE: <strong>${comparacion.mejorAlternativa.caueTotal.toFixed(2)}</strong>
             </div>
         </div>
 
         <div class="result-card">
             <div class="result-label">📊 RESUMEN</div>
-            <div style="margin-top: 10px;">
+            <div style="margin-top: 10px; font-size: clamp(0.85rem, 2.5vw, 1rem);">
                 <div>📈 Tasa de interés: <strong>${comparacion.resumen.tasaInteres}</strong></div>
                 <div>🔢 Alternativas evaluadas: <strong>${comparacion.resumen.numeroAlternativas}</strong></div>
                 ${comparacion.resumen.diferenciaCostos > 0 ?
-        `<div>💰 Diferencia de costos: <strong>$${comparacion.resumen.diferenciaCostos.toFixed(2)}</strong></div>`
+        `<div>💰 Diferencia de costos: <strong>${comparacion.resumen.diferenciaCostos.toFixed(2)}</strong></div>`
         : ''}
             </div>
         </div>
 
-        <h3 style="color: #2c3e50; margin: 20px 0 15px 0;">📋 Ranking de Alternativas</h3>
-        <table class="comparison-table">
-            <thead>
-                <tr>
-                    <th>Pos.</th>
-                    <th>Alternativa</th>
-                    <th>CAUE Total</th>
-                    <th>Factor RC</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${comparacion.ranking.map((alt, index) => `
-                    <tr ${index === 0 ? 'class="best-alternative"' : ''}>
-                        <td>${index + 1}</td>
-                        <td>${alt.nombre}</td>
-                        <td>$${alt.caueTotal.toFixed(2)}</td>
-                        <td>${alt.factorRC.toFixed(6)}</td>
+        <h3 style="color: #2c3e50; margin: 20px 0 15px 0; font-size: clamp(1rem, 3vw, 1.2rem);">📋 Ranking de Alternativas</h3>
+        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th style="min-width: 40px;">Pos.</th>
+                        <th style="min-width: 120px;">Alternativa</th>
+                        <th style="min-width: 100px;">CAUE Total</th>
+                        <th style="min-width: 90px;">Factor RC</th>
                     </tr>
-                `).join('')}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    ${comparacion.ranking.map((alt, index) => `
+                        <tr ${index === 0 ? 'class="best-alternative"' : ''}>
+                            <td>${index + 1}</td>
+                            <td style="word-break: break-word;">${alt.nombre}</td>
+                            <td>${alt.caueTotal.toFixed(2)}</td>
+                            <td>${alt.factorRC.toFixed(4)}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
 
-        <h3 style="color: #2c3e50; margin: 20px 0 15px 0;">🔍 Desglose Detallado</h3>
+        <h3 style="color: #2c3e50; margin: 20px 0 15px 0; font-size: clamp(1rem, 3vw, 1.2rem);">🔍 Desglose Detallado</h3>
         ${comparacion.resultados.map(alt => `
             <div class="result-card">
-                <h4 style="color: #2c3e50; margin-bottom: 15px;">${alt.nombre}</h4>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9em;">
-                    <div>💰 Inversión inicial: $${alt.inversion.toLocaleString()}</div>
-                    <div>📅 Vida útil: ${alt.vidaUtil} años</div>
-                    <div>💸 Costos anuales: $${alt.costosOperacion.toLocaleString()}</div>
-                    <div>💵 Ingresos anuales: $${alt.ingresos.toLocaleString()}</div>
-                    <div>🔄 Valor salvamento: $${alt.valorSalvamento.toLocaleString()}</div>
-                    <div>📊 Factor RC: ${alt.factorRC.toFixed(6)}</div>
+                <h4 style="color: #2c3e50; margin-bottom: 15px; font-size: clamp(1rem, 3vw, 1.1rem);">${alt.nombre}</h4>
+                <div style="display: grid; grid-template-columns: 1fr; gap: 8px; font-size: clamp(0.8rem, 2.2vw, 0.9rem);">
+                    <div>💰 Inversión inicial: <strong>${alt.inversion.toLocaleString()}</strong></div>
+                    <div>📅 Vida útil: <strong>${alt.vidaUtil} años</strong></div>
+                    <div>💸 Costos anuales: <strong>${alt.costosOperacion.toLocaleString()}</strong></div>
+                    <div>💵 Ingresos anuales: <strong>${alt.ingresos.toLocaleString()}</strong></div>
+                    <div>🔄 Valor salvamento: <strong>${alt.valorSalvamento.toLocaleString()}</strong></div>
+                    <div>📊 Factor RC: <strong>${alt.factorRC.toFixed(6)}</strong></div>
                 </div>
-                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e9ecef;">
-                    <strong>CAUE TOTAL: $${alt.caueTotal.toFixed(2)}</strong>
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e9ecef; font-size: clamp(0.9rem, 2.5vw, 1rem);">
+                    <strong>CAUE TOTAL: ${alt.caueTotal.toFixed(2)}</strong>
                 </div>
             </div>
         `).join('')}
