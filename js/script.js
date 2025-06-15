@@ -162,7 +162,7 @@ function mostrarResultados(comparacion) {
                 ${comparacion.mejorAlternativa.nombre}
             </div>
             <div style="font-size: clamp(1rem, 3vw, 1.2rem); margin-top: 10px;">
-                CAUE: <strong>${comparacion.mejorAlternativa.caueTotal.toFixed(2)}</strong>
+                CAUE: <strong>${comparacion.mejorAlternativa.caueTotal.toFixed(4)}</strong>
             </div>
         </div>
 
