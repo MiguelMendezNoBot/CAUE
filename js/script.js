@@ -86,7 +86,7 @@ function agregarAlternativa() {
 }
 
 function cargarEjemploDocente() {
-    document.getElementById('nombre').value = 'Ejercicio Docente';
+    document.getElementById('nombre').value = 'Ejemplo';
     document.getElementById('inversion').value = '30000';
     document.getElementById('vidaUtil').value = '8';
     document.getElementById('valorSalvamento').value = '0';
@@ -155,6 +155,16 @@ function calcularCAUE() {
 function mostrarResultados(comparacion) {
     const container = document.getElementById('resultados-container');
 
+    // Preparar datos para la gráfica
+    const chartData = comparacion.ranking.map((alt, index) => ({
+        alternativa: alt.nombre,
+        caue: Math.abs(alt.caueTotal), // Usar valor absoluto para mejor visualización
+        fill: index === 0 ? '#27ae60' : `hsl(${210 + index * 30}, 70%, 50%)` // Verde para el mejor, otros colores
+    }));
+
+    // Crear la gráfica
+    const chartHtml = crearGraficaBarras(chartData, comparacion);
+
     let html = `
         <div class="result-card">
             <div class="result-label">🏆 MEJOR ALTERNATIVA</div>
@@ -165,6 +175,8 @@ function mostrarResultados(comparacion) {
                 CAUE: <strong>${comparacion.mejorAlternativa.caueTotal.toFixed(4)}</strong>
             </div>
         </div>
+
+        ${chartHtml}
 
         <div class="result-card">
             <div class="result-label">📊 RESUMEN</div>
@@ -221,6 +233,127 @@ function mostrarResultados(comparacion) {
     `;
 
     container.innerHTML = html;
+
+    // Renderizar la gráfica después de que el HTML esté en el DOM
+    setTimeout(() => {
+        renderizarGrafica(chartData, comparacion);
+    }, 100);
+}
+
+// AGREGAR AL FINAL DEL ARCHIVO (después de la línea 201)
+
+function crearGraficaBarras(chartData, comparacion) {
+    return `
+        <div class="chart-container">
+            <div class="chart-header">
+                <div class="chart-title">📊 Comparación CAUE por Alternativa</div>
+                <div class="chart-description">Ranking de alternativas por Costo Anual Uniforme Equivalente</div>
+            </div>
+            <div class="chart-content">
+                <div id="chart-caue" style="width: 100%; height: 100%;"></div>
+            </div>
+            <div class="chart-footer">
+                <div class="chart-footer-trend">
+                    <span>🏆</span>
+                    <span>Mejor alternativa: ${comparacion.mejorAlternativa.nombre}</span>
+                </div>
+                <div class="chart-footer-description">
+                    Menor CAUE indica mejor alternativa económica (tasa: ${comparacion.resumen.tasaInteres})
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function renderizarGrafica(chartData, comparacion) {
+    const chartContainer = document.getElementById('chart-caue');
+    if (!chartContainer) return;
+
+    // Limpiar contenedor previo
+    chartContainer.innerHTML = '';
+
+    // Configurar dimensiones
+    const containerRect = chartContainer.getBoundingClientRect();
+    const width = containerRect.width;
+    const height = Math.max(300, Math.min(400, containerRect.height));
+
+    // Crear SVG
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', width);
+    svg.setAttribute('height', height);
+    svg.style.overflow = 'visible';
+
+    // Márgenes
+    const margin = { top: 20, right: 40, bottom: 40, left: 120 };
+    const chartWidth = width - margin.left - margin.right;
+    const chartHeight = height - margin.top - margin.bottom;
+
+    // Escalas
+    const maxValue = Math.max(...chartData.map(d => d.caue));
+    const xScale = (value) => (value / maxValue) * chartWidth;
+    const yScale = (index) => (index / chartData.length) * chartHeight + (chartHeight / chartData.length) * 0.1;
+    const barHeight = (chartHeight / chartData.length) * 0.8;
+
+    // Grupo principal
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('transform', `translate(${margin.left}, ${margin.top})`);
+
+    // Crear barras y etiquetas
+    chartData.forEach((item, index) => {
+        // Barra
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', '0');
+        rect.setAttribute('y', yScale(index));
+        rect.setAttribute('width', xScale(item.caue));
+        rect.setAttribute('height', barHeight);
+        rect.setAttribute('fill', item.fill);
+        rect.setAttribute('rx', '4');
+        rect.style.cursor = 'pointer';
+
+        // Etiqueta del nombre (eje Y)
+        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        label.setAttribute('x', '-10');
+        label.setAttribute('y', yScale(index) + barHeight / 2);
+        label.setAttribute('text-anchor', 'end');
+        label.setAttribute('dominant-baseline', 'middle');
+        label.setAttribute('fill', '#2c3e50');
+        label.style.fontSize = '12px';
+        label.style.fontWeight = '500';
+        label.textContent = item.alternativa.length > 15 ?
+            item.alternativa.substring(0, 15) + '...' : item.alternativa;
+
+        // Valor en la barra
+        const valueText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        valueText.setAttribute('x', xScale(item.caue) + 5);
+        valueText.setAttribute('y', yScale(index) + barHeight / 2);
+        valueText.setAttribute('dominant-baseline', 'middle');
+        valueText.setAttribute('fill', '#2c3e50');
+        valueText.style.fontSize = '11px';
+        valueText.style.fontWeight = '600';
+        valueText.textContent = item.caue.toFixed(2);
+
+        // Tooltip
+        const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+        title.textContent = `${item.alternativa}: ${item.caue.toFixed(4)}`;
+        rect.appendChild(title);
+
+        g.appendChild(rect);
+        g.appendChild(label);
+        g.appendChild(valueText);
+    });
+
+    // Línea del eje X
+    const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    xAxis.setAttribute('x1', '0');
+    xAxis.setAttribute('y1', chartHeight);
+    xAxis.setAttribute('x2', chartWidth);
+    xAxis.setAttribute('y2', chartHeight);
+    xAxis.setAttribute('stroke', '#e9ecef');
+    xAxis.setAttribute('stroke-width', '1');
+    g.appendChild(xAxis);
+
+    svg.appendChild(g);
+    chartContainer.appendChild(svg);
 }
 
 function mostrarResultadosVacios() {
