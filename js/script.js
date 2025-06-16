@@ -1,13 +1,7 @@
-// Mantener la clase CAUECalculator original (sin cambios en la lógica)
 class CAUECalculator {
     static factorRecuperacionCapital(i, n) {
         if (i === 0) return 1 / n;
         return (i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
-    }
-
-    static factorValorPresente(i, n) {
-        if (i === 0) return n;
-        return (Math.pow(1 + i, n) - 1) / (i * Math.pow(1 + i, n));
     }
 
     static calcularCAUE(alternativa, tasaInteres) {
@@ -54,10 +48,8 @@ class CAUECalculator {
     }
 }
 
-// Variables globales para la interfaz web
 let alternativas = [];
 
-// Funciones de la interfaz web
 function agregarAlternativa() {
     const nombre = document.getElementById('nombre').value || `Alternativa ${alternativas.length + 1}`;
     const inversion = parseFloat(document.getElementById('inversion').value) || 0;
@@ -155,14 +147,12 @@ function calcularCAUE() {
 function mostrarResultados(comparacion) {
     const container = document.getElementById('resultados-container');
 
-    // Preparar datos para la gráfica
     const chartData = comparacion.ranking.map((alt, index) => ({
         alternativa: alt.nombre,
-        caue: Math.abs(alt.caueTotal), // Usar valor absoluto para mejor visualización
-        fill: index === 0 ? '#27ae60' : `hsl(${210 + index * 30}, 70%, 50%)` // Verde para el mejor, otros colores
+        caue: Math.abs(alt.caueTotal),
+        fill: index === 0 ? '#27ae60' : `hsl(${210 + index * 30}, 70%, 50%)`
     }));
 
-    // Crear la gráfica
     const chartHtml = crearGraficaBarras(chartData, comparacion);
 
     let html = `
@@ -234,13 +224,10 @@ function mostrarResultados(comparacion) {
 
     container.innerHTML = html;
 
-    // Renderizar la gráfica después de que el HTML esté en el DOM
     setTimeout(() => {
         renderizarGrafica(chartData, comparacion);
     }, 100);
 }
-
-// AGREGAR AL FINAL DEL ARCHIVO (después de la línea 201)
 
 function crearGraficaBarras(chartData, comparacion) {
     return `
@@ -265,42 +252,34 @@ function crearGraficaBarras(chartData, comparacion) {
     `;
 }
 
-function renderizarGrafica(chartData, comparacion) {
+function renderizarGrafica(chartData) {
     const chartContainer = document.getElementById('chart-caue');
     if (!chartContainer) return;
 
-    // Limpiar contenedor previo
     chartContainer.innerHTML = '';
 
-    // Configurar dimensiones
     const containerRect = chartContainer.getBoundingClientRect();
     const width = containerRect.width;
     const height = Math.max(300, Math.min(400, containerRect.height));
 
-    // Crear SVG
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', width);
     svg.setAttribute('height', height);
     svg.style.overflow = 'visible';
 
-    // Márgenes
     const margin = { top: 20, right: 40, bottom: 40, left: 120 };
     const chartWidth = width - margin.left - margin.right;
     const chartHeight = height - margin.top - margin.bottom;
 
-    // Escalas
     const maxValue = Math.max(...chartData.map(d => d.caue));
     const xScale = (value) => (value / maxValue) * chartWidth;
     const yScale = (index) => (index / chartData.length) * chartHeight + (chartHeight / chartData.length) * 0.1;
     const barHeight = (chartHeight / chartData.length) * 0.8;
 
-    // Grupo principal
     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     g.setAttribute('transform', `translate(${margin.left}, ${margin.top})`);
 
-    // Crear barras y etiquetas
     chartData.forEach((item, index) => {
-        // Barra
         const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         rect.setAttribute('x', '0');
         rect.setAttribute('y', yScale(index));
@@ -310,7 +289,6 @@ function renderizarGrafica(chartData, comparacion) {
         rect.setAttribute('rx', '4');
         rect.style.cursor = 'pointer';
 
-        // Etiqueta del nombre (eje Y)
         const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         label.setAttribute('x', '-10');
         label.setAttribute('y', yScale(index) + barHeight / 2);
@@ -322,7 +300,6 @@ function renderizarGrafica(chartData, comparacion) {
         label.textContent = item.alternativa.length > 15 ?
             item.alternativa.substring(0, 15) + '...' : item.alternativa;
 
-        // Valor en la barra
         const valueText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         valueText.setAttribute('x', xScale(item.caue) + 5);
         valueText.setAttribute('y', yScale(index) + barHeight / 2);
@@ -332,7 +309,6 @@ function renderizarGrafica(chartData, comparacion) {
         valueText.style.fontWeight = '600';
         valueText.textContent = item.caue.toFixed(2);
 
-        // Tooltip
         const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
         title.textContent = `${item.alternativa}: ${item.caue.toFixed(4)}`;
         rect.appendChild(title);
@@ -342,7 +318,6 @@ function renderizarGrafica(chartData, comparacion) {
         g.appendChild(valueText);
     });
 
-    // Línea del eje X
     const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     xAxis.setAttribute('x1', '0');
     xAxis.setAttribute('y1', chartHeight);
@@ -365,7 +340,6 @@ function mostrarResultadosVacios() {
     `;
 }
 
-// Inicialización
 document.addEventListener('DOMContentLoaded', function() {
     actualizarListaAlternativas();
 });

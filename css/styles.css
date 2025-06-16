@@ -117,8 +117,8 @@ input[type="number"]:focus, input[type="text"]:focus {
     transition: all 0.3s ease;
     width: 100%;
     margin-top: 10px;
-    min-height: 48px; /* Mejor para táctil */
-    touch-action: manipulation; /* Mejora la respuesta táctil */
+    min-height: 48px;
+    touch-action: manipulation;
 }
 
 .btn:hover {
@@ -239,9 +239,6 @@ input[type="number"]:focus, input[type="text"]:focus {
     line-height: 1.5;
 }
 
-/* Media Queries para diferentes tamaños de pantalla */
-
-/* Tablets en orientación horizontal y escritorios pequeños */
 @media (min-width: 768px) {
     body {
         padding: 20px;
@@ -296,7 +293,6 @@ input[type="number"]:focus, input[type="text"]:focus {
     }
 }
 
-/* Escritorios grandes */
 @media (min-width: 1024px) {
     .main-content {
         gap: 30px;
@@ -308,7 +304,6 @@ input[type="number"]:focus, input[type="text"]:focus {
     }
 }
 
-/* Smartphones en orientación vertical */
 @media (max-width: 480px) {
     body {
         padding: 5px;
@@ -365,7 +360,6 @@ input[type="number"]:focus, input[type="text"]:focus {
         align-self: flex-end;
     }
 
-    /* Hacer la tabla más legible en móviles */
     .comparison-table {
         font-size: 0.75rem;
     }
@@ -376,7 +370,6 @@ input[type="number"]:focus, input[type="text"]:focus {
     }
 }
 
-/* Optimización para pantallas muy pequeñas */
 @media (max-width: 320px) {
     .header h1 {
         font-size: 1.5rem;
@@ -397,7 +390,6 @@ input[type="number"]:focus, input[type="text"]:focus {
     }
 }
 
-/* Ajustes para pantallas táctiles */
 @media (hover: none) and (pointer: coarse) {
     .btn:hover {
         transform: none;
@@ -409,7 +401,6 @@ input[type="number"]:focus, input[type="text"]:focus {
         transition: transform 0.1s ease;
     }
 
-    /* Aumentar área táctil de botones pequeños */
     .remove-btn {
         min-width: 40px;
         min-height: 40px;

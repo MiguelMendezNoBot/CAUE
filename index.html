@@ -14,11 +14,9 @@
 	</div>
 	
 	<div class="main-content">
-		<!-- Sección de Entrada -->
 		<div class="input-section">
 			<h2 class="section-title">📝 Configuración</h2>
 			
-			<!-- Tasa de Interés Global -->
 			<div class="form-group">
 				<label for="tasaInteres">Tasa de Interés Anual (%)</label>
 				<input type="number" id="tasaInteres" step="0.01" value="5" placeholder="Ej: 5 para 5%">
@@ -63,7 +61,6 @@
 			<button class="btn" onclick="agregarAlternativa()">➕ Agregar Alternativa</button>
 			<button class="btn btn-secondary" onclick="cargarEjemploDocente()">📚 Cargar ejemplo</button>
 			
-			<!-- Lista de Alternativas -->
 			<div id="alternativas-lista" style="margin-top: 25px;">
 				<h3 style="color: #2c3e50; margin-bottom: 15px;">📋 Alternativas Agregadas</h3>
 				<div id="alternativas-container"></div>
@@ -72,7 +69,6 @@
 			<button class="btn" onclick="calcularCAUE()" style="background: linear-gradient(135deg, #e74c3c, #c0392b); margin-top: 20px;">🧮 Calcular CAUE</button>
 		</div>
 		
-		<!-- Sección de Resultados -->
 		<div class="results-section">
 			<h2 class="section-title">📈 Resultados</h2>
 			<div id="resultados-container">
