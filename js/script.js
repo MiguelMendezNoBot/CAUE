@@ -9,7 +9,10 @@ class CAUECalculator {
 
         const factorRC = this.factorRecuperacionCapital(tasaInteres, vidaUtil);
         const caueInversion = inversion * factorRC;
-        const caueValorSalvamento = valorSalvamento * factorRC;
+
+        const factorPresente = Math.pow(1 + tasaInteres, -vidaUtil);
+        const caueValorSalvamento = valorSalvamento * factorPresente * factorRC;
+
         const caueTotal = caueInversion + costosOperacion - ingresos - caueValorSalvamento;
 
         return {
