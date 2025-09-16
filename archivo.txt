@@ -4,3 +4,10 @@ RECETA sillpancho
 3. cocer
 4. servir
 4. comer
+
+
+Version vegetariana:
+1. cortar coliflor
+2. empanizar
+3. cocinar 
+4. servir
