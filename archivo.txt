@@ -3,3 +3,4 @@ RECETA sillpancho
 2. empanizar
 3. cocer
 4. servir
+4. comer
