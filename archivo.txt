@@ -6,11 +6,7 @@ RECETA sillpancho
 4. comer
 
 
-Version vegetariana:
-1. cortar coliflor
-2. empanizar
-3. cocinar 
-4. servir
+
  Version vegana
  1. cortar coliflor
 2. empanizar con sustituto de huevo
